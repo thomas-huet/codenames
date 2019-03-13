@@ -1,4 +1,9 @@
 _build/
+build/
+lib/
+node_modules/
+.merlin
+package-lock.json
 *.bin
 *.native
 *.txt
