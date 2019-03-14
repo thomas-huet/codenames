@@ -26,7 +26,7 @@ let make = (~model, _children) => {
   | Add_white(word) => ReasonReact.Update({...state, white: [word, ...state.white], hint: None})
   | Add_black(word) => ReasonReact.Update({...state, black: [word, ...state.black], hint: None})
   | Hint =>
-    if (state.green == []) {
+    if (state.green == [] || (state.white == [] && state.black == [])) {
       ReasonReact.NoUpdate
     } else {
       ReasonReact.Update({...state, hint: Some(Hint.best(model, state.green, state.white, state.black))})
