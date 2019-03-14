@@ -1,6 +1,9 @@
+type color = Green | White | Black
+
 type t = {
   vec : float array array;
   dict : (string, int) Hashtbl.t;
+  common_words : string array;
 }
 
 let euclidian_distance a b =

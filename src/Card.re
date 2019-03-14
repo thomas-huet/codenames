@@ -1,7 +1,4 @@
-type color =
-| Green
-| Black
-| White;
+open Model
 
 let color_name = fun
 | Green => "green"
@@ -10,10 +7,10 @@ let color_name = fun
 
 let component = ReasonReact.statelessComponent("Card");
 
-let make = (~color, word) => {
+let make = (~color, ~onClick=ignore, word) => {
   ...component,
   render: (_self) =>
-    <div className={"card " ++ color_name(color)}>
+    <div className={"card " ++ color_name(color)} onClick=onClick>
       {ReasonReact.string(word)}
     </div>
 }

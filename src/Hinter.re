@@ -34,11 +34,11 @@ let make = (~model, _children) => {
   },
   render: ({state, send}) => {
     let cards = Array.of_list(
-      List.map((word) => <Card color=Card.Green>...word</Card>, state.green)
+      List.map((word) => <Card color=Green>...word</Card>, state.green)
       @
-      List.map((word) => <Card color=Card.White>...word</Card>, state.white)
+      List.map((word) => <Card color=White>...word</Card>, state.white)
       @
-      List.map((word) => <Card color=Card.Black>...word</Card>, state.black)
+      List.map((word) => <Card color=Black>...word</Card>, state.black)
     );
     <>
       <WordInput onSubmit={(word) => send(Add_green(word))} model=model>

@@ -6,8 +6,6 @@ type t = {
   score : float;
 }
 
-type color = Green | White | Black
-
 let eps = 0.001
 
 let make model green white black word id =

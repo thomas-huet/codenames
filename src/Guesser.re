@@ -33,7 +33,7 @@ let make = (~model, _children) => {
       List.map(snd, List.sort(compare, list))
     }
     };
-    let cards = Array.of_list(List.map((word) => <Card color=Card.White>...word</Card>, sorted_list));
+    let cards = Array.of_list(List.map((word) => <Card color=White>...word</Card>, sorted_list));
     <>
       <WordInput onChange={(word) => send(Set_hint(word))} model=model>
         ...{ReasonReact.string("Hint:")}
