@@ -2,9 +2,11 @@ _build/
 build/
 lib/
 node_modules/
+.bsb.lock
 .merlin
 package-lock.json
 *.bin
+*.bs.js
 *.native
 *.txt
 *.zip

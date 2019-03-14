@@ -1,5 +1,7 @@
+let max_value = 6.
+
 let fixed_of_float f =
-  let n = int_of_float (f *. float (1 lsl 15) /. 6.) land 65535 in
+  let n = int_of_float (f *. float (1 lsl 15) /. max_value) land 65535 in
   let b = Bytes.create 2 in
   Bytes.set b 0 (Char.chr (n land 255));
   Bytes.set b 1 (Char.chr (n lsr 8));

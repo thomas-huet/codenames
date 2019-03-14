@@ -1,1 +1,1 @@
-ReactDOMRe.renderToElementWithId(<Main/>, "root");
+ReactDOMRe.renderToElementWithId(<Starter/>, "root");
