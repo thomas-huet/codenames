@@ -8,6 +8,10 @@ let make = (~onSubmit=?, ~onChange=ignore, ~model, child) => {
   reducer: (action, _state) => ReasonReact.Update(action),
   render: ({send, state}) => {
     let valid = (w) => Hashtbl.mem(model.dict, w);
+    let submit = switch (onSubmit) {
+    | None => ignore
+    | Some(submit) => (_event) => if (valid(state)) {submit(state); send("")}
+    };
     <div>
       child
       <input value=state onChange={(event) => {
@@ -21,10 +25,15 @@ let make = (~onSubmit=?, ~onChange=ignore, ~model, child) => {
           onChange(Some(word))
         }
         send(word)
+      }} onKeyPress={(event) => {
+        let key = ReactEvent.Keyboard.key(event);
+        if (key == "Enter") {
+          submit()
+        }
       }}/>
-      {switch(onSubmit) {
+      {switch (onSubmit) {
       | None => ReasonReact.null
-      | Some(submit) => <button onClick={(_event) => if (valid(state)) {submit(state)}}>{ReasonReact.string("Submit")}</button>
+      | Some(_) => <button onClick=submit>{ReasonReact.string("Submit")}</button>
       }}
     </div>
   }

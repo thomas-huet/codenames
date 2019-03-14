@@ -11,5 +11,5 @@ To prepare a model from [GloVe](https://nlp.stanford.edu/projects/glove) with 50
 ```
 wget "http://nlp.stanford.edu/data/glove.6B.zip"
 unzip glove.6B.zip
-head -n 100000 glove.6B.50d.txt | ./compress.native -d 50 > model.bin
+head -n 100000 glove.6B.50d.txt | ./compress.native -d 50 > model-50d-100k.bin
 ```

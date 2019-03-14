@@ -21,7 +21,7 @@ let make = (~model, _children) => {
         <button onClick={(_event) => send(Guesser)}>{ReasonReact.string("Guesser")}</button>
         <button onClick={(_event) => send(Hinter)}>{ReasonReact.string("Hinter")}</button>
       </div>
-      {switch(state) {
+      {switch (state) {
       | Game => <Game model=model/>
       | Guesser => <Guesser model=model/>
       | Hinter => <Hinter model=model/>

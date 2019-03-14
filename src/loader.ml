@@ -10,8 +10,8 @@ let float_of_fixed a b =
   in
   float n /. float (1 lsl 15) *. max_value
 
-let parse w d a =
-  let model = Array.make w {str = ""; vec = [||]} in
+let parse dict w d a =
+  let model = Array.make w [||] in
   let rec parse_string i b =
     if a.(i) = Char.code ' ' then
       Bytes.to_string (Buffer.to_bytes b), i + 1
@@ -24,19 +24,17 @@ let parse w d a =
   for j = 0 to w - 1 do
     let b = Buffer.create 3 in
     let str, ii = parse_string !i b in
+    Hashtbl.add dict str j;
     let vec = Array.make d 0. in
     for k = 0 to d - 1 do
       vec.(k) <- float_of_fixed a.(ii + 2 * k) a.(ii + 2 * k + 1)
     done;
     i := ii + 2 * d;
-    model.(j) <- { str; vec }
+    model.(j) <- vec
   done;
   model
 
 let load w d a =
-  let words = parse w d a in
   let dict = Hashtbl.create w in
-  for i = 0 to w - 1 do
-    Hashtbl.add dict words.(i).str i
-  done;
-  { words; dict }
+  let vec = parse dict w d a in
+  { vec; dict }

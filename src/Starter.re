@@ -8,9 +8,9 @@ let make = (_children) => {
   ...component,
   initialState: () => Loading,
   reducer: (model, _state) => ReasonReact.Update(Ready(model)),
-  render: ({state, send}) => switch(state) {
+  render: ({state, send}) => switch (state) {
   | Loading => {
-      Fetch.get("model.bin", (data) => {Js.log(data); send(Loader.load(100_000, 50, data))});
+      Fetch.get("model-100d-150k.bin", (data) => send(Loader.load(150_000, 100, data)));
       <div>{ReasonReact.string("Loading")}</div>
     }
   | Ready(model) =>

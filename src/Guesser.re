@@ -1,3 +1,5 @@
+open Model;
+
 type state = {
   hint : option(string),
   words : list(string),
@@ -16,13 +18,22 @@ let make = (~model, _children) => {
     hint: None,
     words: [],
   },
-  reducer: (action, state) => switch action {
+  reducer: (action, state) => switch (action) {
   | Set_hint(hint) => ReasonReact.Update({...state, hint})
   | Add_word(word) => ReasonReact.Update({...state, words: [word, ...state.words]})
   | Remove_word(word) => ReasonReact.Update({...state, words: List.filter((!=)(word), state.words)})
   },
   render: ({state, send}) => {
-    let cards = Array.of_list(List.map((word) => <Card color=Card.White>...word</Card>, state.words));
+    let vec = (word) => model.vec[Hashtbl.find(model.dict, word)];
+    let sorted_list = switch (state.hint) {
+    | None => state.words
+    | Some(word) => {
+      let v = vec(word);
+      let list = List.map((w) => (distance(v, vec(w)), w), state.words);
+      List.map(snd, List.sort(compare, list))
+    }
+    };
+    let cards = Array.of_list(List.map((word) => <Card color=Card.White>...word</Card>, sorted_list));
     <>
       <WordSelector onChange={(word) => send(Set_hint(word))} model=model>
         ...{ReasonReact.string("Hint:")}
