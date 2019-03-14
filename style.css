@@ -1,0 +1,26 @@
+#table {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.card {
+  text-align: center;
+  padding: 1em;
+  margin: 1em;
+  width: 10em;
+  border-radius: 1em;
+  border: solid black;
+}
+
+.green {
+  background-color: #a2e6a2;
+}
+
+.white {
+  background-color: #f2ecd3;;
+}
+
+.black {
+  background-color: #b1b1b1;
+}
