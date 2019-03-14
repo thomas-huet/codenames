@@ -35,13 +35,13 @@ let make = (~model, _children) => {
     };
     let cards = Array.of_list(List.map((word) => <Card color=Card.White>...word</Card>, sorted_list));
     <>
-      <WordSelector onChange={(word) => send(Set_hint(word))} model=model>
+      <WordInput onChange={(word) => send(Set_hint(word))} model=model>
         ...{ReasonReact.string("Hint:")}
-      </WordSelector>
-      <WordSelector onSubmit={(word) => send(Add_word(word))} model=model>
+      </WordInput>
+      <WordInput onSubmit={(word) => send(Add_word(word))} model=model>
         ...{ReasonReact.string("Add word")}
-      </WordSelector>
-      <div className="table">
+      </WordInput>
+      <div id="table">
         ...cards
       </div>
     </>

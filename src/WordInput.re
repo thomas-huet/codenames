@@ -1,6 +1,6 @@
 open Model;
 
-let component = ReasonReact.reducerComponent("WordSelector");
+let component = ReasonReact.reducerComponent("WordInput");
 
 let make = (~onSubmit=?, ~onChange=ignore, ~model, child) => {
   ...component,
