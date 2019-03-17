@@ -20,6 +20,7 @@ type state = {
 
 type action =
 | New
+| Pass
 | Guess(int)
 | Hint(string, int);
 
@@ -80,6 +81,7 @@ let make = (~model, _children) => {
   initialState: () => create(model),
   reducer: (action, state) => switch (action) {
   | New => ReasonReact.Update(create(model))
+  | Pass => ReasonReact.Update({...state, hint: None})
   | Guess(i) => {
     let card = state.cards[i];
     switch (card.their_color) {
@@ -156,10 +158,17 @@ let make = (~model, _children) => {
         <Card classes=[(card.my_color :> card_class), ...(card.guess :> list(card_class))] onClick=click>...card.word</Card>
       }, state.cards);
     <>
-      <button onClick={(_event) => send(New)}>{ReasonReact.string("New game")}</button>
+      <div>
+        <button onClick={(_event) => send(New)}>{ReasonReact.string("New game")}</button>
+      </div>
       {switch (state.hint) {
       | None => <HintInput onSubmit={(word, n) => send(Hint(word, n))} model=model/>
-      | Some((word, n)) => ReasonReact.string(word ++ " " ++ string_of_int(n))
+      | Some((word, n)) =>
+        <>
+          {ReasonReact.string(word ++ " " ++ string_of_int(n))}
+          <br/>
+          <button onClick={(_event) => send(Pass)}>{ReasonReact.string("Pass")}</button>
+        </>
       }}
       <div id="table">
         ...cards
