@@ -84,15 +84,15 @@ let make = (~model, _children) => {
     let card = state.cards[i];
     switch (card.their_color) {
     | `Green => {
-      card = {...card, guess: [`Correct, ...card.guess]};
+      state.cards[i] = {...card, guess: [`Correct, ...card.guess]};
       ReasonReact.Update(state)
     }
     | `White => {
-      card = {...card, guess: [`Me_wrong, ...card.guess]};
+      state.cards[i] = {...card, guess: [`Me_wrong, ...card.guess]};
       ReasonReact.Update({...state, hint: None})
     }
     | `Black => {
-      card = {...card, guess: [`Me_wrong, ...card.guess]};
+      state.cards[i] = {...card, guess: [`Me_wrong, ...card.guess]};
       alert("You lost");
       ReasonReact.Update(state)
     }
