@@ -25,7 +25,14 @@ let component = ReasonReact.reducerComponent("Game");
 let make = (~model, _children) => {
   ...component,
   initialState: () => {
-    let random_word = () => model.common_words[Random.int(Array.length(model.common_words))];
+    let rec random_word = () => {
+      let word = model.common_words[Random.int(Array.length(model.common_words))];
+      if (Js.Re.test(word, Js.Re.fromString("^[a-z]{3,}$"))) {
+        word
+      } else {
+        random_word()
+      }
+    };
     let shuffle = (a) => {
       let n = Array.length(a);
       for (i in 0 to n - 1) {

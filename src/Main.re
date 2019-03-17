@@ -8,12 +8,7 @@ let component = ReasonReact.reducerComponent("Main");
 let make = (~model, _children) => {
   ...component,
   initialState: () => Game,
-  reducer: (action, state) =>
-    if (action == state) {
-      ReasonReact.NoUpdate
-    } else {
-      ReasonReact.Update(action)
-    },
+  reducer: (action, _state) => ReasonReact.Update(action),
   render: ({state, send}) =>
     <>
       <div>
