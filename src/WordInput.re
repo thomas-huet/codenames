@@ -2,7 +2,7 @@ open Model;
 
 let component = ReasonReact.reducerComponent("WordInput");
 
-let make = (~onSubmit=?, ~onChange=ignore, ~model, child) => {
+let make = (~onSubmit=?, ~onChange=ignore, ~model, ~button=?, _children) => {
   ...component,
   initialState: () => "",
   reducer: (action, _state) => ReasonReact.Update(action),
@@ -10,10 +10,9 @@ let make = (~onSubmit=?, ~onChange=ignore, ~model, child) => {
     let valid = (w) => Hashtbl.mem(model.dict, w);
     let submit = switch (onSubmit) {
     | None => ignore
-    | Some(submit) => (_event) => if (valid(state)) {submit(state); send("")}
+    | Some(submit) => () => if (valid(state)) {submit(state); send("")}
     };
-    <div>
-      child
+    <>
       <input value=state onChange={(event) => {
         let e = ReactEvent.Form.target(event);
         let word = e##value;
@@ -31,10 +30,15 @@ let make = (~onSubmit=?, ~onChange=ignore, ~model, child) => {
           submit()
         }
       }}/>
-      {switch (onSubmit) {
+      {switch (button) {
       | None => ReasonReact.null
-      | Some(_) => <button onClick=submit>{ReasonReact.string("Submit")}</button>
+      | Some(text) =>
+        if (valid(state)) {
+          <button onClick={(_event) => submit()}>{ReasonReact.string(text)}</button>
+        } else {
+          <button disabled=true>{ReasonReact.string(text)}</button>
+        }
       }}
-    </div>
+    </>
   }
 }

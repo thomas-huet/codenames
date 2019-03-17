@@ -1,16 +1,23 @@
-open Model
-
-let color_name = fun
-| Green => "green"
-| Black => "black"
-| White => "white";
+let class_name = fun
+| `Green => "green"
+| `White => "white"
+| `Black => "black"
+| `Me_wrong => "me_wrong"
+| `They_wrong => "they_wrong"
+| `Correct => "correct";
 
 let component = ReasonReact.statelessComponent("Card");
 
-let make = (~color, ~onClick=ignore, word) => {
+let make = (~classes, ~onClick=None, word) => {
   ...component,
-  render: (_self) =>
-    <div className={"card " ++ color_name(color)} onClick=onClick>
+  render: (_self) => {
+    let class_name = List.fold_left((name, c) => {name ++ " " ++ class_name(c)},"card", classes);
+    let click = switch (onClick) {
+    | None => ignore
+    | Some(click) => (_event) => click();
+    };
+    <div className=class_name onClick=click>
       {ReasonReact.string(word)}
     </div>
+  }
 }

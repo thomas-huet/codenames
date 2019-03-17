@@ -2,20 +2,23 @@ open Model;
 
 Random.self_init();
 
+type card_class = [`Green | `White | `Black | `Correct | `Me_wrong | `They_wrong];
+
 type card = {
   word : string,
-  my_color : color,
-  their_color : color,
+  my_color : [`Green | `White | `Black],
+  their_color : [`Green | `White | `Black],
+  guess : list([`Correct | `Me_wrong | `They_wrong]),
 };
 
 type state = {
   cards : array(card),
-  hint : option(string),
+  hint : option((string, int)),
 };
 
 type action =
 | Guess(int)
-| Hint(string);
+| Hint(string, int);
 
 let component = ReasonReact.reducerComponent("Game");
 
@@ -37,26 +40,27 @@ let make = (~model, _children) => {
       word: random_word(),
       my_color: my_color,
       their_color: their_color,
+      guess: [],
     };
     let cards = Array.init(25, (i) => {
       if (i == 0) {
-        make_card(Black, Black)
+        make_card(`Black, `Black)
       } else if (i == 1) {
-        make_card(Black, Green)
+        make_card(`Black, `Green)
       } else if (i == 2) {
-        make_card(Black, White)
+        make_card(`Black, `White)
       } else if (i == 3) {
-        make_card(Green, Black)
+        make_card(`Green, `Black)
       } else if (i == 4) {
-        make_card(White, Black)
+        make_card(`White, `Black)
       } else if (i < 8) {
-        make_card(Green, Green)
+        make_card(`Green, `Green)
       } else if (i < 13) {
-        make_card(Green, White)
+        make_card(`Green, `White)
       } else if (i < 18) {
-        make_card(White, Green)
+        make_card(`White, `Green)
       } else {
-        make_card(White, White)
+        make_card(`White, `White)
       }
     });
     let cards = shuffle(cards);
@@ -65,16 +69,34 @@ let make = (~model, _children) => {
   reducer: (action, state) => switch (action) {
   | Guess(i) => {
     switch (state.cards[i].their_color) {
-    | Green => ReasonReact.NoUpdate
-    | White => ReasonReact.NoUpdate
-    | Black => ReasonReact.NoUpdate
+    | `Green => {
+      state.cards[i] = {...state.cards[i], guess: [`Correct]};
+      ReasonReact.Update(state)
+    }
+    | `White => ReasonReact.NoUpdate // TODO
+    | `Black => ReasonReact.NoUpdate // TODO
     }
   }
-  | Hint(word) => ReasonReact.NoUpdate
+  | Hint(word, n) => ReasonReact.NoUpdate // TODO
   },
   render: ({state, send}) => {
-    let cards = Array.mapi((i, card) => <Card color=card.my_color onClick={(_event) => send(Guess(i))}>...card.word</Card>, state.cards);
+    let cards = Array.mapi((i, card) => {
+        let click = switch (state.hint) {
+        | None => None
+        | Some(_) =>
+          if (List.mem(`Correct, card.guess) || List.mem(`Me_wrong, card.guess)) {
+            None
+          } else {
+            Some(() => send(Guess(i)))
+          }
+        };
+        <Card classes=[(card.my_color :> card_class), ...(card.guess :> list(card_class))] onClick=click>...card.word</Card>
+      }, state.cards);
     <>
+      {switch (state.hint) {
+      | None => <HintInput onSubmit={(word, n) => send(Hint(word, n))} model=model/>
+      | Some((word, n)) => ReasonReact.string(word ++ " " ++ string_of_int(n))
+      }}
       <div id="table">
         ...cards
       </div>

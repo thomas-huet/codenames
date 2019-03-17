@@ -33,14 +33,15 @@ let make = (~model, _children) => {
       List.map(snd, List.sort(compare, list))
     }
     };
-    let cards = Array.of_list(List.map((word) => <Card color=White>...word</Card>, sorted_list));
+    let cards = Array.of_list(List.map((word) => <Card classes=[`White]>...word</Card>, sorted_list));
     <>
-      <WordInput onChange={(word) => send(Set_hint(word))} model=model>
-        ...{ReasonReact.string("Hint:")}
-      </WordInput>
-      <WordInput onSubmit={(word) => send(Add_word(word))} model=model>
-        ...{ReasonReact.string("Add word")}
-      </WordInput>
+      <div>
+        {ReasonReact.string("Hint: ")}
+        <WordInput onChange={(word) => send(Set_hint(word))} model=model/>
+      </div>
+      <div>
+        <WordInput onSubmit={(word) => send(Add_word(word))} model=model button="Add word"/>
+      </div>
       <div id="table">
         ...cards
       </div>

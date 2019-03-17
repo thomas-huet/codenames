@@ -6,11 +6,18 @@
 
 .card {
   text-align: center;
-  padding: 1em;
   margin: 1em;
   width: 10em;
+  height: 5em;
   border-radius: 1em;
   border: solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .green {
@@ -23,4 +30,12 @@
 
 .black {
   background-color: #b1b1b1;
+}
+
+.correct {
+  background-color: #66bc66;
+}
+
+input[type="number"] {
+  width: 2em;
 }

@@ -34,22 +34,22 @@ let make = (~model, _children) => {
   },
   render: ({state, send}) => {
     let cards = Array.of_list(
-      List.map((word) => <Card color=Green>...word</Card>, state.green)
+      List.map((word) => <Card classes=[`Green]>...word</Card>, state.green)
       @
-      List.map((word) => <Card color=White>...word</Card>, state.white)
+      List.map((word) => <Card classes=[`White]>...word</Card>, state.white)
       @
-      List.map((word) => <Card color=Black>...word</Card>, state.black)
+      List.map((word) => <Card classes=[`Black]>...word</Card>, state.black)
     );
     <>
-      <WordInput onSubmit={(word) => send(Add_green(word))} model=model>
-        ...{ReasonReact.string("Add green word")}
-      </WordInput>
-      <WordInput onSubmit={(word) => send(Add_white(word))} model=model>
-        ...{ReasonReact.string("Add white word")}
-      </WordInput>
-      <WordInput onSubmit={(word) => send(Add_black(word))} model=model>
-        ...{ReasonReact.string("Add black word")}
-      </WordInput>
+      <div>
+        <WordInput onSubmit={(word) => send(Add_green(word))} model=model button="Add green word"/>
+      </div>
+      <div>
+        <WordInput onSubmit={(word) => send(Add_white(word))} model=model button="Add white word"/>
+      </div>
+      <div>
+        <WordInput onSubmit={(word) => send(Add_black(word))} model=model button="Add black word"/>
+      </div>
       <button onClick={(_event) => send(Hint)}>{ReasonReact.string("Get hint")}</button>
       {switch (state.hint) {
       | None => ReasonReact.null

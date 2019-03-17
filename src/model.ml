@@ -1,5 +1,3 @@
-type color = Green | White | Black
-
 type t = {
   vec : float array array;
   dict : (string, int) Hashtbl.t;
