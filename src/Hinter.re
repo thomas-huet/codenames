@@ -50,7 +50,7 @@ let make = (~model, _children) => {
       <div>
         <WordInput onSubmit={(word) => send(Add_black(word))} model=model button="Add black word"/>
       </div>
-      <button onClick={(_event) => send(Hint)}>{ReasonReact.string("Get hint")}</button>
+      <button onClick={(_event) => send(Hint)} disabled={state.green == [] || (state.white == [] && state.black == [])}>{ReasonReact.string("Get hint")}</button>
       {switch (state.hint) {
       | None => ReasonReact.null
       | Some((word, n)) => <div>{ReasonReact.string(word ++ " " ++ string_of_int(n))}</div>

@@ -36,6 +36,16 @@
   background-color: #66bc66;
 }
 
+.me_wrong {
+  border-bottom-color: #d10303;
+  border-right-color: #d10303;
+}
+
+.they_wrong {
+  border-top-color: #d10303;
+  border-left-color: #d10303;
+}
+
 input[type="number"] {
   width: 2em;
 }

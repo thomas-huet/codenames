@@ -11,10 +11,14 @@ let component = ReasonReact.statelessComponent("Card");
 let make = (~classes, ~onClick=None, word) => {
   ...component,
   render: (_self) => {
-    let class_name = List.fold_left((name, c) => {name ++ " " ++ class_name(c)},"card", classes);
+    let base_class = switch (onClick) {
+    | None => "card"
+    | Some(_) => "card clickable"
+    };
+    let class_name = List.fold_left((name, c) => {name ++ " " ++ class_name(c)}, base_class, classes);
     let click = switch (onClick) {
     | None => ignore
-    | Some(click) => (_event) => click();
+    | Some(click) => (_event) => click()
     };
     <div className=class_name onClick=click>
       {ReasonReact.string(word)}

@@ -77,14 +77,55 @@ let make = (~model, _children) => {
   | Guess(i) => {
     switch (state.cards[i].their_color) {
     | `Green => {
-      state.cards[i] = {...state.cards[i], guess: [`Correct]};
+      state.cards[i] = {...state.cards[i], guess: [`Correct, ...state.cards[i].guess]};
       ReasonReact.Update(state)
     }
-    | `White => ReasonReact.NoUpdate // TODO
+    | `White => {
+      state.cards[i] = {...state.cards[i], guess: [`Me_wrong, ...state.cards[i].guess]};
+      ReasonReact.Update({...state, hint: None})
+    }
     | `Black => ReasonReact.NoUpdate // TODO
     }
   }
-  | Hint(word, n) => ReasonReact.NoUpdate // TODO
+  | Hint(word, n) => {
+    let vec = (word) => model.vec[Hashtbl.find(model.dict, word)];
+    let v = vec(word);
+    let distances = Array.mapi((i, card) => {
+        if (List.mem(`They_wrong, card.guess) || List.mem(`Correct, card.guess)) {
+          (1000., i)
+        } else {
+          (distance(v, vec(card.word)), i)
+        }
+      }, state.cards);
+    Array.sort(compare, distances);
+    let get_hint = () => {
+      let cards = List.filter((card) => {!List.mem(`Me_wrong, card.guess) && !List.mem(`Correct, card.guess)}, Array.to_list(state.cards));
+      let green = List.map((card) => card.word, List.filter((card) => card.their_color == `Green, cards));
+      let white = List.map((card) => card.word, List.filter((card) => card.their_color == `White, cards));
+      let black = List.map((card) => card.word, List.filter((card) => card.their_color == `Black, cards));
+      Some(Hint.best(model, green, white, black))
+    }
+    let rec guess = (i, n) => {
+      if (i == n) {
+        ReasonReact.Update({...state, hint: get_hint()})
+      } else {
+        let j = snd(distances[i]);
+        let card = state.cards[j];
+        switch (card.my_color) {
+        | `Green => {
+          state.cards[j] = {...card, guess: [`Correct, ...card.guess]};
+          guess(i + 1, n)
+        }
+        | `White => {
+          state.cards[j] = {...card, guess: [`They_wrong, ...card.guess]};
+          ReasonReact.Update({...state, hint: get_hint()})
+        }
+        | `Black => ReasonReact.NoUpdate // TODO
+        }
+      }
+    };
+    guess(0, n)
+  }
   },
   render: ({state, send}) => {
     let cards = Array.mapi((i, card) => {
