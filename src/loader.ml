@@ -27,8 +27,8 @@ let load w d c a =
     let b = Buffer.create 3 in
     let str, ii = parse_string !i b in
     Hashtbl.add dict str j;
-    if j < c then
-      common_words.(j) <- str;
+    if j >= 50 && j < c + 50 then
+      common_words.(j - 50) <- str;
     let v = Array.make d 0. in
     for k = 0 to d - 1 do
       v.(k) <- float_of_fixed a.(ii + 2 * k) a.(ii + 2 * k + 1)
