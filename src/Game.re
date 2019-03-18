@@ -141,7 +141,7 @@ let make = (~model, _children) => {
         }
       }
     };
-    Js.log("Guessing");
+    Js.log("Guessing " ++ string_of_int(n));
     guess(0, n)
   }
   },
