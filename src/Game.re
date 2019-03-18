@@ -25,9 +25,11 @@ type action =
 | Hint(string, int);
 
 let create = (model) => {
+  let used_words = Hashtbl.create(25);
   let rec random_word = () => {
     let word = model.common_words[Random.int(Array.length(model.common_words))];
-    if (Js.Re.test(word, Js.Re.fromString("^[a-z]{3,}$"))) {
+    if (Js.Re.test(word, Js.Re.fromString("^[a-z]{3,}$")) && !Hashtbl.mem(used_words, word)) {
+      Hashtbl.add(used_words, word, ());
       word
     } else {
       random_word()
