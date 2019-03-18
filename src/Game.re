@@ -112,6 +112,7 @@ let make = (~model, _children) => {
       }, state.cards);
     Array.sort(compare, distances);
     let get_hint = () => {
+      Js.log("Hinting");
       let cards = List.filter((card) => {!List.mem(`Me_wrong, card.guess) && !List.mem(`Correct, card.guess)}, Array.to_list(state.cards));
       let cards = List.map((card) => (card.word, card.their_color), cards);
       Some(Hint.best(model, cards))
@@ -122,6 +123,7 @@ let make = (~model, _children) => {
       } else {
         let j = snd(distances[i]);
         let card = state.cards[j];
+        Js.log("guess " ++ card.word);
         switch (card.my_color) {
         | `Green => {
           state.cards[j] = {...card, guess: [`Correct, ...card.guess]};
@@ -139,6 +141,7 @@ let make = (~model, _children) => {
         }
       }
     };
+    Js.log("Guessing");
     guess(0, n)
   }
   },
