@@ -8,15 +8,9 @@ type t = {
 
 let eps = 0.001
 
-let make model green white black word id =
+let make model cards word id =
   let u = model.vec.(id) in
-  let cards =
-    List.map (fun v -> distance u v, `Green) green
-    @
-    List.map (fun v -> distance u v, `White) white
-    @
-    List.map (fun v -> distance u v, `Black) black
-  in
+  let cards = List.map (fun (v, color) -> distance u v, color) cards in
   let cards = List.sort compare cards in
   let rec score n tot = function
   | [] -> invalid_arg "Not all cards should be good."
@@ -26,14 +20,12 @@ let make model green white black word id =
   in
   score 0 0. cards
 
-let best model green white black =
+let best model cards =
   let vec word = model.vec.(Hashtbl.find model.dict word) in
-  let green = List.map vec green in
-  let white = List.map vec white in
-  let black = List.map vec black in
+  let cards = List.map (fun (w, color) -> vec w, color) cards in
   let best = ref { word = ""; n = 0; score = 0. } in
   let update_best word id =
-    let hint = make model green white black word id in
+    let hint = make model cards word id in
     if hint.score > !best.score then
       best := hint
   in

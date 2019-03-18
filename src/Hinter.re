@@ -1,14 +1,18 @@
+type color = [`Green | `White | `Black];
+
+let cycle = fun
+| `Green => `White
+| `White => `Black
+| `Black => `Green;
+
 type state = {
-  green : list(string),
-  white : list(string),
-  black : list(string),
+  cards : list((string, color)),
   hint : option((string, int)),
 };
 
 type action =
-| Add_green(string)
-| Add_white(string)
-| Add_black(string)
+| Add_card(string)
+| Change_color(string)
 | Hint;
 
 let component = ReasonReact.reducerComponent("Hinter");
@@ -16,41 +20,25 @@ let component = ReasonReact.reducerComponent("Hinter");
 let make = (~model, _children) => {
   ...component,
   initialState: () => {
-    green: [],
-    white: [],
-    black: [],
+    cards: [],
     hint: None,
   },
   reducer: (action, state) => switch (action) {
-  | Add_green(word) => ReasonReact.Update({...state, green: [word, ...state.green], hint: None})
-  | Add_white(word) => ReasonReact.Update({...state, white: [word, ...state.white], hint: None})
-  | Add_black(word) => ReasonReact.Update({...state, black: [word, ...state.black], hint: None})
-  | Hint =>
-    if (state.green == [] || (state.white == [] && state.black == [])) {
-      ReasonReact.NoUpdate
-    } else {
-      ReasonReact.Update({...state, hint: Some(Hint.best(model, state.green, state.white, state.black))})
-    }
+  | Add_card(word) => ReasonReact.Update({cards: [(word, `White), ...state.cards], hint: None})
+  | Change_color(word) => {
+    let cards = List.map(((w, color)) => if (w == word) {(w, cycle(color))} else {(w, color)}, state.cards);
+    ReasonReact.Update({...state, cards: cards})
+  }
+  | Hint => ReasonReact.Update({...state, hint: Some(Hint.best(model, state.cards))})
   },
   render: ({state, send}) => {
-    let cards = Array.of_list(
-      List.map((word) => <Card classes=[`Green]>...word</Card>, state.green)
-      @
-      List.map((word) => <Card classes=[`White]>...word</Card>, state.white)
-      @
-      List.map((word) => <Card classes=[`Black]>...word</Card>, state.black)
-    );
+    let cards = Array.of_list(List.map(((word, color)) => <Card classes=[color] onClick={Some(() => send(Change_color(word)))}>...word</Card>, state.cards));
+    let button_disabled = List.for_all(((_, color)) => color == `Green, state.cards) || List.for_all(((_, color)) => color != `Green, state.cards);
     <>
       <div>
-        <WordInput onSubmit={(word) => send(Add_green(word))} model=model button="Add green word"/>
+        <WordInput onSubmit={(word) => send(Add_card(word))} model=model button="Add word"/>
       </div>
-      <div>
-        <WordInput onSubmit={(word) => send(Add_white(word))} model=model button="Add white word"/>
-      </div>
-      <div>
-        <WordInput onSubmit={(word) => send(Add_black(word))} model=model button="Add black word"/>
-      </div>
-      <button onClick={(_event) => send(Hint)} disabled={state.green == [] || (state.white == [] && state.black == [])}>{ReasonReact.string("Get hint")}</button>
+      <button onClick={(_event) => send(Hint)} disabled=button_disabled>{ReasonReact.string("Get hint")}</button>
       {switch (state.hint) {
       | None => ReasonReact.null
       | Some((word, n)) => <div>{ReasonReact.string(word ++ " " ++ string_of_int(n))}</div>

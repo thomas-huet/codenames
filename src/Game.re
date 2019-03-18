@@ -113,10 +113,8 @@ let make = (~model, _children) => {
     Array.sort(compare, distances);
     let get_hint = () => {
       let cards = List.filter((card) => {!List.mem(`Me_wrong, card.guess) && !List.mem(`Correct, card.guess)}, Array.to_list(state.cards));
-      let green = List.map((card) => card.word, List.filter((card) => card.their_color == `Green, cards));
-      let white = List.map((card) => card.word, List.filter((card) => card.their_color == `White, cards));
-      let black = List.map((card) => card.word, List.filter((card) => card.their_color == `Black, cards));
-      Some(Hint.best(model, green, white, black))
+      let cards = List.map((card) => (card.word, card.their_color), cards);
+      Some(Hint.best(model, cards))
     }
     let rec guess = (i, n) => {
       if (i == n) {
