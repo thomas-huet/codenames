@@ -156,7 +156,11 @@ let make = (~model, _children) => {
             Some(() => send(Guess(i)))
           }
         };
-        <Card classes=[(card.my_color :> card_class), ...(card.guess :> list(card_class))] onClick=click>...card.word</Card>
+        let color = switch (state.hint) {
+        | None => card.my_color
+        | Some(_) => `White
+        };
+        <Card classes=[(color :> card_class), ...(card.guess :> list(card_class))] onClick=click>...card.word</Card>
       }, state.cards);
     <>
       <div>
