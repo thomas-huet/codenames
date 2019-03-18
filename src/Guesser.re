@@ -26,7 +26,7 @@ let make = (~model, _children) => {
   render: ({state, send}) => {
     let vec = (word) => model.vec[Hashtbl.find(model.dict, word)];
     let sorted_list = switch (state.hint) {
-    | None => state.words
+    | None => List.rev(state.words)
     | Some(word) => {
       let v = vec(word);
       let list = List.map((w) => (distance(v, vec(w)), w), state.words);

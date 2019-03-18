@@ -32,7 +32,7 @@ let make = (~model, _children) => {
   | Hint => ReasonReact.Update({...state, hint: Some(Hint.best(model, state.cards))})
   },
   render: ({state, send}) => {
-    let cards = Array.of_list(List.map(((word, color)) => <Card classes=[color] onClick={Some(() => send(Change_color(word)))}>...word</Card>, state.cards));
+    let cards = Array.of_list(List.map(((word, color)) => <Card classes=[color] onClick={Some(() => send(Change_color(word)))}>...word</Card>, List.rev(state.cards)));
     let button_disabled = List.for_all(((_, color)) => color == `Green, state.cards) || List.for_all(((_, color)) => color != `Green, state.cards);
     <>
       <div>
