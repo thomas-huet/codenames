@@ -15,7 +15,7 @@ let make = (~onSubmit=?, ~onChange=ignore, ~model, ~button=?, _children) => {
     <>
       <input value=state onChange={(event) => {
         let e = ReactEvent.Form.target(event);
-        let word = e##value;
+        let word = Js.String.toLowerCase(e##value);
         if (!valid(word)) {
           e##setCustomValidity("This word is not in the dictionary.");
           onChange(None)
