@@ -29,8 +29,10 @@ let make = (~model, _children) => {
     | None => List.rev(state.words)
     | Some(word) => {
       let v = vec(word);
-      let list = List.map((w) => (distance(v, vec(w)), w), state.words);
-      List.map(snd, List.sort(compare, list))
+      let list = List.sort(compare, List.map((w) => (distance(v, vec(w)), w), state.words));
+      Js.log("distances:");
+      List.iter(((d, w)) => Js.log(w ++ " " ++ string_of_float(d)), list);
+      List.map(snd, list)
     }
     };
     let cards = Array.of_list(List.map((word) => <Card classes=[`White]>...word</Card>, sorted_list));

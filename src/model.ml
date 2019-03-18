@@ -26,7 +26,7 @@ let angular_distance a b =
   for i = 0 to dim - 1 do
     c := !c +. a.(i) *. b.(i)
   done;
-  let c = !c /. norm a /. norm b in
+  let c = min 1. (!c /. norm a /. norm b) in
   acos c
 
 let distance = angular_distance
